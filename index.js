@@ -1,5 +1,6 @@
 const chrispaul = require("child_process");
-
+const express = require("express");
+const app = express();
 
 
 function filterEmpty(elm){
@@ -24,11 +25,21 @@ function parse(data) {
 }
 
 
+app.get('/api/status', (req, res) => {
 chrispaul.exec("playerctl metadata", (error, stdout, stderr) => {
   if(error) {
     console.error("I'm gonna kill myself: "+error)
     return;
   }
-  console.log(stdout)
-  console.log(parse(stdout))
+  res.send(parse(stdout.toString().trim()))
 });
+});
+
+// I'm so sorry
+app.post('/api/actions/back', (res) => {chrispaul.exec("playerctl previous"); res.end();})
+app.post('/api/actions/next', (res) => {chrispaul.exec("playerctl next"); res.end();})
+app.post('/api/actions/playpause', (res) => {chrispaul.exec("playerctl play-pause"); res.end();})
+
+app.get('/', express.static("./resources/"));
+
+app.listen(6969);

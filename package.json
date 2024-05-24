@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/veast-network/MusicController-Linux/issues"
   },
-  "homepage": "https://github.com/veast-network/MusicController-Linux#readme"
+  "homepage": "https://github.com/veast-network/MusicController-Linux#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
 }

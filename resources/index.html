@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<!--
+
+- Music Controller v1
+- made by chloe
+
+ -->
+<head>
+    <title>Music Controller v1</title>
+    <script>
+	setInterval(function() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", document.location.origin+"/api/status?"+Math.random()); // I'm so sorry.
+        xhr.send();
+        xhr.responseType = "text";
+        xhr.onload = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                const data = xhr.response;
+                const json = JSON.parse(data);
+                document.getElementById('np').innerText = `Now Playing: ${json.spotify.xesam.artist} - ${json.spotify.xesam.title}`
+                document.getElementById("aa").src = json.spotify.mpris.artUrl
+            } else {
+                console.log("Error: "+xhr.status);
+            }
+        };
+	}, 1000)
+	function sendRq(action) {
+	    const xhr = new XMLHttpRequest();
+        xhr.open("POST", document.location.origin+"/api/actions/"+action);
+        xhr.send();
+        xhr.responseType = "text";
+        xhr.onload = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                const data = xhr.response;
+                console.log(data);
+            } else {
+                console.log("Error: "+xhr.status);
+            }
+        };
+	}
+    </script>
+	<style>
+	
+	html {
+	font-family: arial;
+	background-color: black;
+	color: white;
+	}
+	
+	</style>
+</head>
+
+<body>
+    <h1>Music Controller</h1>
+    <img id="aa" src="" height=300 width=300/>
+    <p id="np">Now Playing: Loading...</p>
+    <input id="back" type="button" value="Back" onclick="sendRq('back')" />
+    <input id="pp" type="button" value="Play/Pause" onclick="sendRq('playpause')" />
+    <input id="next" type="button" value="Next" onclick="sendRq('next')" />
+
+</body>
+
+</html>
