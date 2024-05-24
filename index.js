@@ -1,4 +1,4 @@
-const chrispaul = require("child_process");
+const cprocess = require("child_process");
 const express = require("express");
 const app = express();
 
@@ -26,7 +26,7 @@ function parse(data) {
 
 
 app.get('/api/status', (req, res) => {
-chrispaul.exec("playerctl metadata", (error, stdout, stderr) => {
+cprocess.exec("playerctl metadata", (error, stdout, stderr) => {
   if(error) {
     console.error("I'm gonna kill myself: "+error)
     return;
@@ -36,9 +36,9 @@ chrispaul.exec("playerctl metadata", (error, stdout, stderr) => {
 });
 
 // I'm so sorry
-app.post('/api/actions/back', (res) => {chrispaul.exec("playerctl previous"); res.end();})
-app.post('/api/actions/next', (res) => {chrispaul.exec("playerctl next"); res.end();})
-app.post('/api/actions/playpause', (res) => {chrispaul.exec("playerctl play-pause"); res.end();})
+app.post('/api/actions/back', (res) => {cprocess.exec("playerctl previous"); res.end();})
+app.post('/api/actions/next', (res) => {cprocess.exec("playerctl next"); res.end();})
+app.post('/api/actions/playpause', (res) => {cprocess.exec("playerctl play-pause"); res.end();})
 
 app.get('/', express.static("./resources/"));
 

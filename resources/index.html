@@ -19,7 +19,10 @@
                 const data = xhr.response;
                 const json = JSON.parse(data);
                 document.getElementById('np').innerText = `Now Playing: ${json.spotify.xesam.artist} - ${json.spotify.xesam.title}`
+                if(document.getElementById("aa").src != json.spotify.mpris.artUrl) {
+                console.log("changed url")
                 document.getElementById("aa").src = json.spotify.mpris.artUrl
+                }
             } else {
                 console.log("Error: "+xhr.status);
             }
