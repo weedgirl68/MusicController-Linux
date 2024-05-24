@@ -1,0 +1,19 @@
+{
+  "name": "musiccontroller-linux",
+  "version": "0.0.1",
+  "description": "music controller thing. for devices from the stone age",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/veast-network/MusicController-Linux.git"
+  },
+  "author": "Chloe (veast-network)",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/veast-network/MusicController-Linux/issues"
+  },
+  "homepage": "https://github.com/veast-network/MusicController-Linux#readme"
+}
