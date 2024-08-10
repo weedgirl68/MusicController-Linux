@@ -1,45 +1,53 @@
-const cprocess = require("child_process");
+const { execSync, exec } = require("child_process");
+const { readFileSync } = require('fs');
 const express = require("express");
+const { Router } = express;
 const app = express();
 
+// api
 
-function filterEmpty(elm){
-    return (elm != null && elm !== false && elm !== "");
-}
+const api = Router()
 
-function parse(data) {
-        let lines = data.split("\n");
-        let obj = {};
-        for(const line of lines) {
-            let s = line.split(" ").filter(filterEmpty);
-            let player = s.shift();
-            let dataType = s.shift().split(":");
-            let dataName = dataType.pop();
-            dataType = dataType[0];
-            let data = s.join(" ");
-            if(!obj[player]) obj[player] = {};
-            if(!obj[player][dataType]) obj[player][dataType] = {}; 
-            obj[player][dataType][dataName] = data;
-        }
-        return obj;
-}
+// player status
+api.get('/status', (req, res) => {
+  let status =
+    execSync("playerctl metadata --format '{{ artist }} - {{ title }}'");
 
-
-app.get('/api/status', (req, res) => {
-cprocess.exec("playerctl metadata", (error, stdout, stderr) => {
-  if(error) {
-    console.error("I'm gonna kill myself: "+error)
-    return;
-  }
-  res.send(parse(stdout.toString().trim()))
-});
+  res.send(status);
 });
 
-// I'm so sorry
-app.post('/api/actions/back', (res) => {cprocess.exec("playerctl previous"); res.end();})
-app.post('/api/actions/next', (res) => {cprocess.exec("playerctl next"); res.end();})
-app.post('/api/actions/playpause', (res) => {cprocess.exec("playerctl play-pause"); res.end();})
+// album art
+api.get('/aa', (req, res) => {
+  let meta =
+    execSync("playerctl --player=firefox metadata mpris:artUrl")
+      .toString().
+      replace("\n", "");
+
+  res.send(
+    readFileSync(
+      meta.replace("file://", "")
+    )
+  );
+
+}); // hows this
+
+// actions
+
+const actions = Router()
+
+actions.post('/back', (res) => { exec("playerctl previous"); res.end(); })
+actions.post('/next', (res) => { exec("playerctl next"); res.end(); })
+actions.post('/playpause', (res) => { exec("playerctl play-pause"); res.end(); })
+
+// mount paths
+
+api.use("/actions", actions)
+app.use("/api", api)
+
+// static resources
 
 app.get('/', express.static("./resources/"));
+
+// start listening on port 6969
 
 app.listen(6969);

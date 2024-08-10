@@ -6,57 +6,56 @@
 - made by chloe
 
  -->
+
 <head>
     <title>Music Controller v1</title>
     <script>
-	setInterval(function() {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", document.location.origin+"/api/status?"+Math.random()); // I'm so sorry.
-        xhr.send();
-        xhr.responseType = "text";
-        xhr.onload = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                const data = xhr.response;
-                const json = JSON.parse(data);
-                document.getElementById('np').innerText = `Now Playing: ${json.spotify.xesam.artist} - ${json.spotify.xesam.title}`
-                if(document.getElementById("aa").src != json.spotify.mpris.artUrl) {
-                console.log("changed url")
-                document.getElementById("aa").src = json.spotify.mpris.artUrl
+        let t;
+        setInterval(function () {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", document.location.origin + "/api/status?" + Math.random()); // I'm so sorry.
+            xhr.send();
+            xhr.responseType = "text";
+            xhr.onload = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    const data = xhr.response;
+                    document.getElementById('np').innerText = "Now Playing: " + data
+                    if (t !== data) {
+                        document.getElementById('aa').src = document.location.origin + "/api/aa?" + Math.random() // I'm not sorry.
+                    }
+                    t = data;
+                } else {
+                    console.log("Error: " + xhr.status);
                 }
-            } else {
-                console.log("Error: "+xhr.status);
-            }
-        };
-	}, 1000)
-	function sendRq(action) {
-	    const xhr = new XMLHttpRequest();
-        xhr.open("POST", document.location.origin+"/api/actions/"+action);
-        xhr.send();
-        xhr.responseType = "text";
-        xhr.onload = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                const data = xhr.response;
-                console.log(data);
-            } else {
-                console.log("Error: "+xhr.status);
-            }
-        };
-	}
+            };
+        }, 1000)
+        function sendRq(action) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", document.location.origin + "/api/actions/" + action);
+            xhr.send();
+            xhr.responseType = "text";
+            xhr.onload = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    const data = xhr.response;
+                    console.log(data);
+                } else {
+                    console.log("Error: " + xhr.status);
+                }
+            };
+        }
     </script>
-	<style>
-	
-	html {
-	font-family: arial;
-	background-color: black;
-	color: white;
-	}
-	
-	</style>
+    <style>
+        html {
+            font-family: arial;
+            background-color: black;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Music Controller</h1>
-    <img id="aa" src="" height=300 width=300/>
+    <img id="aa" src="x" />
     <p id="np">Now Playing: Loading...</p>
     <input id="back" type="button" value="Back" onclick="sendRq('back')" />
     <input id="pp" type="button" value="Play/Pause" onclick="sendRq('playpause')" />
